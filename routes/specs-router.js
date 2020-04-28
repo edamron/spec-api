@@ -26,9 +26,23 @@ router.get('/:id', async (req, res) => {
 router.post('/', (req, res) => {});
 
 // all makes for a given year
-router.get('/makes/:year', async (req, res) => {
+// was '/makes/:year'
+router.get('/:year/makes', async (req, res) => {
 	try {
 		const specs = await Specs.distinct('make', { year: req.params.year });
+		res.send(specs);
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+});
+
+// all models for a given year & make
+router.get('/:year/makes/:make', async (req, res) => {
+	try {
+		const specs = await Specs.find({
+			year: req.params.year,
+			make: req.params.make,
+		});
 		res.send(specs);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
